@@ -46,13 +46,13 @@ public class LoginKaptchaFilter extends UsernamePasswordAuthenticationFilter {
                 String password = userInfo.get(getPasswordParameter());
                 String kaptcha = userInfo.get(getKaptchaParameter());
                 String sessionVerifyCode = String.valueOf(request.getSession().getAttribute("kaptcha"));
-//                if (!ObjectUtils.isEmpty(kaptcha) && !ObjectUtils.isEmpty(sessionVerifyCode) &&
-//                        kaptcha.equalsIgnoreCase(sessionVerifyCode)) {
+                if (!ObjectUtils.isEmpty(kaptcha) && !ObjectUtils.isEmpty(sessionVerifyCode) &&
+                        kaptcha.equalsIgnoreCase(sessionVerifyCode)) {
                     UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken.unauthenticated(username, password);
                     this.setDetails(request, authRequest);
                     return this.getAuthenticationManager().authenticate(authRequest);
-//                }
-//                throw new KaptchaNotMatchException("VerifyCode error");
+                }
+                throw new KaptchaNotMatchException("VerifyCode error");
 
 
             } catch (IOException e) {

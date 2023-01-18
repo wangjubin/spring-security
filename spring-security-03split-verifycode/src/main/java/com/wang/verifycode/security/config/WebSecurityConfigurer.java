@@ -49,7 +49,6 @@ public class WebSecurityConfigurer {
                 .userDetailsService(userService)
                 .exceptionHandling().authenticationEntryPoint(new MyAuthenticationEntryPoint()).and()
                 .formLogin()
-                .and().rememberMe()
                 .and().logout().logoutSuccessHandler(new MyLogoutSuccessHandler());
         http.securityContext((securityContext) -> securityContext.requireExplicitSave(false));
         return http.build();
