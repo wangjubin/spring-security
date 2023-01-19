@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
@@ -54,7 +55,8 @@ public class WebSecurityConfigurer {
 
     @Bean
     public DefaultSecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests().anyRequest().authenticated()
+        http.authorizeHttpRequests()
+                .anyRequest().authenticated()
                 .and().formLogin().loginProcessingUrl("/doLogin")
                 .successHandler(new MyAuthenticationSuccessHandler())
                 .failureHandler(new MyAuthenticationFailureHandler())
@@ -64,7 +66,9 @@ public class WebSecurityConfigurer {
                 .and().exceptionHandling()
                 .authenticationEntryPoint(new MyAuthenticationEntryPoint())
                 .and().userDetailsService(userDetailsService())
-                .csrf().disable()
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .ignoringAntMatchers("/doLogin")
+                .and()
                 //开启会话管理
                 .sessionManagement()
                 //允许同一个用户只允许创建一个会话
